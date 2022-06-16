@@ -49,6 +49,9 @@
         >
 
         <TextView
+            android:background="@drawable/circle_blue"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:id="@+id/textViewOne"
             android:layout_margin="5dp"
             android:textSize="18sp"
@@ -60,6 +63,9 @@
             tools:visibility="visible"
             />
         <TextView
+            android:background="@drawable/circle_yellow"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:id="@+id/textViewTwo"
             android:layout_margin="5dp"
             android:textSize="18sp"
@@ -70,6 +76,9 @@
             android:visibility="gone"
             tools:visibility="visible"/>
         <TextView
+            android:background="@drawable/circle_red"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:id="@+id/textViewThree"
             android:layout_margin="5dp"
             android:textSize="18sp"
@@ -80,6 +89,9 @@
             android:visibility="gone"
             tools:visibility="visible"/>
         <TextView
+            android:background="@drawable/circle_gray"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:id="@+id/textViewFour"
             android:layout_margin="5dp"
             android:textSize="18sp"
@@ -90,6 +102,9 @@
             android:visibility="gone"
             tools:visibility="visible"/>
         <TextView
+            android:background="@drawable/circle_gray"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:id="@+id/textViewFive"
             android:layout_margin="5dp"
             android:textSize="18sp"
@@ -100,6 +115,9 @@
             android:visibility="gone"
             tools:visibility="visible"/>
         <TextView
+            android:background="@drawable/circle_gray"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:id="@+id/textViewSix"
             android:layout_margin="5dp"
             android:textSize="18sp"
