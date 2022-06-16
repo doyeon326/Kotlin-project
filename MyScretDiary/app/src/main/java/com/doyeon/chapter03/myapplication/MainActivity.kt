@@ -1,6 +1,7 @@
 package com.doyeon.chapter03.myapplication
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         //호출 하는 이유는 apply 에서 초기 minValue 와 maxValue 를 설정해주기 때문이다. 안그러면 사용하는시점에만
         //불리기 때문에 설정이 안된다.
         numberPicker3
-        numberPicker1
+        numberPicker2
         numberPicker1
 
         openButton.setOnClickListener{
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
             if (passwordPreferences.getString("password","000").equals(passwordFromUser)) {
                 //패스워드 성공
-                //TODO 다이어리 페이지 작성 후에 넘겨줘야함
+                startActivity(Intent(this, DiaryActivity::class.java))
                 Log.d("MainActivity", "saved password: ${passwordPreferences.getString("password","000")} user password ${passwordFromUser}" )
             } else {
                 //실패
@@ -101,11 +102,9 @@ class MainActivity : AppCompatActivity() {
                     changePasswordButton.setBackgroundColor(Color.RED)
                 } else {
                     //실패
-
                     showErrorAlertDialog()
                 }
             }
-
         }
     }
 
