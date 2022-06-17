@@ -6,13 +6,338 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <View
+        android:id="@+id/topLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/keypadTableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:id="@+id/expressionTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="44dp"
+        android:textSize="30sp"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/black"
+        android:gravity="end"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/resultTextView"
+        app:layout_constraintBottom_toTopOf="@+id/keypadTableLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:gravity="end"
+        android:textSize="20sp"
+        android:textColor="#aaaaaa"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_height="wrap_content"/>
+
+    <TableLayout
+        android:id="@+id/keypadTableLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:shrinkColumns="*"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/topLayout"
+        app:layout_constraintVertical_weight="1.5"
+        android:paddingTop="21dp"
+        android:paddingBottom="21dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        >
+
+        <TableRow android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/clearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="C"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:onClick="clearButtonClicked"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="()"
+                android:textColor="@color/green"
+                android:enabled="false"
+                android:clickable="false"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="%"
+                android:textColor="@color/green"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="÷"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/green"
+                />
+        </TableRow>
+
+        <TableRow android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatButton
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="7"
+
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/textColor"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="8"
+                android:textColor="@color/textColor"
+                android:enabled="false"
+                android:clickable="false"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="9"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="x"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/green"
+                />
+        </TableRow>
+
+        <TableRow android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatButton
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="4"
+
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/textColor"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="5"
+                android:textColor="@color/textColor"
+                android:enabled="false"
+                android:clickable="false"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="6"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="-"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/green"
+                />
+        </TableRow>
+
+        <TableRow android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatButton
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="1"
+
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/textColor"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="2"
+                android:textColor="@color/textColor"
+                android:enabled="false"
+                android:clickable="false"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="3"
+                android:textColor="@color/textColor"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="+"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+                android:textColor="@color/green"
+                />
+        </TableRow>
+
+        <TableRow android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/historyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="7"
+                android:src="@drawable/ic_baseline_access_time_24"
+                android:textSize="24sp"
+                android:onClick="historyButtonClicked"
+                android:textColor="@color/textColor"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="0"
+                android:textColor="@color/textColor"
+                android:enabled="false"
+                android:clickable="false"
+                android:textSize="24sp"
+                android:onClick="buttonClicked"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background"
+                android:stateListAnimator="@null"
+                android:text="."
+
+                android:textColor="@color/textColor"
+                android:textSize="24sp"
+                android:enabled="false"
+                android:clickable="false"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/resultButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:background="@drawable/button_background_green"
+                android:stateListAnimator="@null"
+                android:text="="
+                android:textSize="24sp"
+                android:onClick="resultButtonClicked"
+                android:textColor="@color/white"
+                />
+        </TableRow>
+
+    </TableLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
