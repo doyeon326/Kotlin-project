@@ -6,9 +6,14 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.room.Room
+import com.doyeon.chapter04.calculator.model.History
 import java.lang.NumberFormatException
 
 class MainActivity : AppCompatActivity() {
@@ -21,12 +26,28 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.resultTextView)
     }
 
+    private val historyLayout: View by lazy {
+        findViewById<View>(R.id.historyLayout)
+    }
+
+    private val historyLinearLayout: LinearLayout by lazy {
+        findViewById<LinearLayout>(R.id.historyLinearLayout)
+    }
+
+    lateinit var db: AppDatabase
+
     private var isOperator = false
     private var hasOperator = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "historyDB"
+        ).build()
     }
 
     fun buttonClicked(v: View) {
@@ -122,6 +143,11 @@ class MainActivity : AppCompatActivity() {
         val expressionText = expressionTextView.text.toString()
         val resultText = calculateExpression()
 
+        //디비에 넣어주는 부분
+        Thread(Runnable {
+            db.historyDao().insertHistory(History(null, expressionText,resultText))
+        }).start()
+
         resultTextView.text = ""
         expressionTextView.text = resultText
 
@@ -158,7 +184,43 @@ class MainActivity : AppCompatActivity() {
         hasOperator = false
     }
 
-    fun historyButtonClicked(v: View) {}
+    fun historyButtonClicked(v: View) {
+        //TODO 디비에서 모든 기록 가져오기
+        //TODO 뷰에 모든 기록 할당하기
+
+        historyLayout.isVisible = true
+        historyLinearLayout.removeAllViews()
+
+        Thread(Runnable {
+            db.historyDao().getAll().reversed().forEach{
+                runOnUiThread {
+                    val historyView = LayoutInflater.from(this).inflate(R.layout.histry_row, null, false)
+                    historyView.findViewById<TextView>(R.id.expressionTextView).text = it.expression
+                    historyView.findViewById<TextView>(R.id.resultTextView).text = "=${it.result}"
+                    historyLinearLayout.addView(historyView)
+
+                }
+            }
+        }).start()
+    }
+
+    fun closedButtonClicked(v: View) {
+        historyLayout.isVisible = false
+
+
+    }
+
+    fun historyClearButtonClicked(v: View) {
+        //TODO: 디비에서 모든 기록 삭제
+        //TODO: 뷰에서 모든 기록 삭제
+
+        historyLinearLayout.removeAllViews()
+
+        Thread(Runnable {
+            db.historyDao().deleteAll()
+        }).start()
+
+    }
 
 
 
