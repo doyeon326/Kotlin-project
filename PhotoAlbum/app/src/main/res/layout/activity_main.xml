@@ -7,6 +7,65 @@
     tools:context=".MainActivity">
 
 
+    <LinearLayout
+        android:id="@+id/firstRowLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintDimensionRatio="H, 3:1"
+        >
+        <ImageView
+            android:id="@+id/photoImageView11"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/photoImageView12"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/photoImageView13"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondRowLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/firstRowLinearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintDimensionRatio="H, 3:1"
+        >
+        <ImageView
+            android:id="@+id/photoImageView21"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/photoImageView22"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/photoImageView23"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
+    </LinearLayout>
+
+
     <Button
         android:id="@+id/startPhotoFrameModeButton" 
         android:layout_width="0dp"
@@ -24,5 +83,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="사진 추가하기 "/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
