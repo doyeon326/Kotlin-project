@@ -55,6 +55,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initStartPhotoFrameModeButton() {
+        startPhotoFrameModeButton.setOnClickListener {
+            val intent = Intent(this, PhotoFrameAcitivity::class.java)
+            imageUriList.forEachIndexed { index, uri ->
+                intent.putExtra("photo$index", uri.toString())
+            }
+            intent.putExtra("photoListSize", imageUriList.size)
+            startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -74,6 +85,7 @@ class MainActivity : AppCompatActivity() {
                     navigatePhotos()
                 } shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) ->{
                     //todo 교육용 팝업 확인 후 권한 팝업을 띄우는 기능
+                    showPermissionContextPopup()
                 }
                 else -> {
                     requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1000)
@@ -129,7 +141,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initStartPhotoFrameModeButton() {
 
-    }
 }
