@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         soundPool.release()
     }
-    
+
     private fun bindViews() {
         seekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
@@ -62,14 +62,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onStartTrackingTouch(p0: SeekBar?) {
-                    currentCountDownTimer?.cancel()
-                    currentCountDownTimer = null
+                    stopCountDown()
                 }
 
                 override fun onStopTrackingTouch(p0: SeekBar?) {
                     seekBar ?: return
+                    if( seekBar.progress == 0 ) {
+                        stopCountDown()
+                    } else {
+                        startCountDown()
+                    }
 
-                    startCountDown()
                 }
             }
         )
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateRemainingTime(remainMills: Long) {
         val remainSeconds = remainMills / 1000
 
-        remainMinutesTextView.text = "%02d".format(remainSeconds / 60)
+        remainMinutesTextView.text = "%02d'".format(remainSeconds / 60)
         remainSecondsTextView.text = "%02d".format(remainSeconds % 60)
     }
 
@@ -126,6 +129,12 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "initSounds")
         tickingSoundId = soundPool.load(this, R.raw.timer_ticking, 1)
         bellSoundId = soundPool.load(this, R.raw.timer_bell, 1)
+    }
+
+    private fun stopCountDown() {
+        soundPool.autoPause()
+        currentCountDownTimer?.cancel()
+        currentCountDownTimer = null
     }
 
 }
