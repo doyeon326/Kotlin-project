@@ -1,9 +1,11 @@
 package com.doyeon.chapter06.pomodorotimer
 
 import android.annotation.SuppressLint
+import android.media.SoundPool
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 
@@ -21,14 +23,34 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.remainSecondsTextView)
     }
 
+    private val soundPool = SoundPool.Builder().build()
     private var currentCountDownTimer: CountDownTimer? = null
+    private var tickingSoundId: Int? = null
+    private var bellSoundId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         bindViews()
+        initSounds()
     }
 
+    override fun onResume() {
+        super.onResume()
+        soundPool.autoResume()
+        //auto가 아닐경우에는 specific 한 id만 control이 가능하다.
+    }
+
+    override fun onPause() {
+        super.onPause()
+        soundPool.autoPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        soundPool.release()
+    }
+    
     private fun bindViews() {
         seekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
@@ -46,8 +68,8 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onStopTrackingTouch(p0: SeekBar?) {
                     seekBar ?: return
-                    currentCountDownTimer = createCountDownTimer(seekBar.progress * 60 * 1000L)
-                    currentCountDownTimer?.start()
+
+                    startCountDown()
                 }
             }
         )
@@ -63,11 +85,30 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                updateRemainingTime(0)
-                updateSeekBar(0)
-
+                completeCountDown()
             }
         }
+
+    private fun completeCountDown() {
+        updateRemainingTime(0)
+        updateSeekBar(0)
+
+        //벨소리 작업
+        soundPool.autoPause() //tickingsound
+        bellSoundId?.let { soundId ->
+            soundPool.play(soundId, 1F, 1F, 0, 0, 1F)
+        }
+    }
+
+    private fun startCountDown() {
+        currentCountDownTimer = createCountDownTimer(seekBar.progress * 60 * 1000L)
+        currentCountDownTimer?.start()
+        Log.d("MainActivity", "onStopTrackingTouch")
+        tickingSoundId?.let { soundId ->
+            Log.d("MainActivity", "optional binding")
+            soundPool.play(soundId, 1F, 1F, 0, -1, 1F)
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private fun updateRemainingTime(remainMills: Long) {
@@ -79,6 +120,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSeekBar(remainMills: Long) {
         seekBar.progress = (remainMills / 1000 / 60).toInt()
+    }
+
+    private fun initSounds() {
+        Log.d("MainActivity", "initSounds")
+        tickingSoundId = soundPool.load(this, R.raw.timer_ticking, 1)
+        bellSoundId = soundPool.load(this, R.raw.timer_bell, 1)
     }
 
 }
