@@ -9,6 +9,13 @@ import android.widget.Button
 import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
+
+    private val recordTimeTextView: CountUpView by lazy {
+        findViewById(R.id.recordTimeTextView)
+    }
+    private val soundVisualizerView: SoundVisualizerView by lazy {
+        findViewById(R.id.soundVisualizerView)
+    }
     private val resetButton: Button by lazy {
         findViewById(R.id.resetButton)
     }
@@ -60,8 +67,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
+
+        soundVisualizerView.onRequestCurrentAmplitude = {
+            recorder?.maxAmplitude ?: 0
+        }
+
         resetButton.setOnClickListener {
             stopPlaying()
+            soundVisualizerView.clearVisualization()
+            recordTimeTextView.clearCountTime()
             state = State.BEFORE_RECORDING
         }
 
@@ -96,7 +110,9 @@ class MainActivity : AppCompatActivity() {
             setOutputFile(recordingFilePath)
             prepare()
         }
+        soundVisualizerView.startVisualizing(false)
         recorder?.start()
+        recordTimeTextView.startCountUp()
         state = State.ON_RECORDING
     }
 
@@ -107,6 +123,8 @@ class MainActivity : AppCompatActivity() {
         }
         recorder = null
         state = State.AFTER_RECORDING
+        recordTimeTextView.stopCountUp()
+        soundVisualizerView.stopVisualizing()
     }
 
     private fun startPlaying() {
@@ -114,14 +132,22 @@ class MainActivity : AppCompatActivity() {
             setDataSource(recordingFilePath)
             prepare()
         }
+        player?.setOnCompletionListener {
+            stopPlaying()
+            state = State.AFTER_RECORDING
+        }
         player?.start()
         state = State.ON_PLAYING
+        recordTimeTextView.startCountUp()
+        soundVisualizerView.startVisualizing(true)
     }
 
     private fun stopPlaying() {
         player?.release()
         player = null
         state = State.AFTER_RECORDING
+        recordTimeTextView.stopCountUp()
+        soundVisualizerView.stopVisualizing()
     }
 
 
