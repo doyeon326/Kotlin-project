@@ -37,6 +37,7 @@
             android:id="@+id/addressBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
             android:inputType="textUri"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/goHomeButton"
