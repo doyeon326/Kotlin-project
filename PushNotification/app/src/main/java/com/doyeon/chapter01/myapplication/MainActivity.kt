@@ -1,5 +1,6 @@
 package com.doyeon.chapter01.myapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,8 +22,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Log.d("MainActivity", "main activity called")
         initFirebase()
+        updateResult()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        updateResult(true)
+
+    }
     private fun initFirebase() {
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
@@ -33,5 +41,14 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun updateResult(isNewIntent: Boolean = false) {
+        resultTextView.text = (intent.getStringExtra("notificationType") ?: "앱 런처") +
+                if (isNewIntent) {
+                    "(으)로 갱신 했습니다."
+                } else {
+                    "(으)로 실행했습니다."
+                }
     }
 }

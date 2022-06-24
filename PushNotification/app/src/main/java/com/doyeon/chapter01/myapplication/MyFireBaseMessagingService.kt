@@ -3,7 +3,11 @@ package com.doyeon.chapter01.myapplication
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.RemoteViews
@@ -53,11 +57,21 @@ class MyFireBaseMessagingService: FirebaseMessagingService() {
     }
 
     private fun createNotification(type: NotificationType, title: String?, message: String?): Notification {
+
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("notificationType", "${type.title} 타입")
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        val pendingIntent = PendingIntent.getActivity(this, type.id, intent, FLAG_IMMUTABLE)
+        //https://developer.android.com/reference/android/app/PendingIntent
+
         val notificationBuilder =  NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
 
 
         when(type) {
