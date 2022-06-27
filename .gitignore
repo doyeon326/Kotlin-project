@@ -174,3 +174,4 @@ fabric.properties
 
 #Firebase
 PushNotification/app/google-services.json
+TodaysQuote/app/google-services.json
