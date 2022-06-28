@@ -175,3 +175,6 @@ fabric.properties
 #Firebase
 PushNotification/app/google-services.json
 TodaysQuote/app/google-services.json
+
+#APIKey
+BookReview/app/src/main/res/values.api_key
