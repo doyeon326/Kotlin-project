@@ -1,4 +1,4 @@
-package model
+package com.doyeon.chapter4.myapplication.model
 
 import com.google.gson.annotations.SerializedName
 

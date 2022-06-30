@@ -1,17 +1,21 @@
 package com.doyeon.chapter4.myapplication
 
-import adapter.BookAdapter
+import com.doyeon.chapter4.myapplication.adapter.BookAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import api.BookService
+import androidx.room.Room
+import com.doyeon.chapter4.myapplication.adapter.HistoryAdapter
+import com.doyeon.chapter4.myapplication.api.BookService
 import com.doyeon.chapter4.myapplication.databinding.ActivityMainBinding
-import model.BestSellerDto
-import model.Book
-import model.SearchBookDto
+import com.doyeon.chapter4.myapplication.model.BestSellerDto
+import com.doyeon.chapter4.myapplication.model.Book
+import com.doyeon.chapter4.myapplication.model.History
+import com.doyeon.chapter4.myapplication.model.SearchBookDto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +28,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: BookAdapter
+    private lateinit var historyAdapter: HistoryAdapter
     private lateinit var bookService: BookService
+
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +39,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initRecyclerView()
+        initHistoryRecyclerView()
+        initSearchEditText()
+
+        //create database
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "BookSearchDB"
+        ).build()
 
         val retrofit =  Retrofit.Builder()
             .baseUrl("https://book.interpark.com")
@@ -46,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                     response: Response<BestSellerDto>
                 ) {
                     if (response.isSuccessful.not()) {
-                        Log.d(TAG,  "NOT SUCCESSFUL")
+                        Log.d(TAG,  "NOT SUCCESSFUL ${response.message()}")
                         return
                     }
                     response.body()?.let {
@@ -63,24 +79,15 @@ class MainActivity : AppCompatActivity() {
                     Log.e(TAG, t.toString())
                 }
             })
-        binding.searchEditText.setOnKeyListener { view, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == MotionEvent.ACTION_DOWN) {
-                //2번의 키코드 이벤트가 들어온다: 업 & 다운
-                search(binding.searchEditText.text.toString())
-                return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
-        }
+
     }
 
     private fun search(keyword: String) {
         bookService.getBooksByName(getString(R.string.interparkAPIKey), keyword)
-            .enqueue(object: Callback<SearchBookDto>{
-                override fun onResponse(
-                    call: Call<SearchBookDto>,
-                    response: Response<SearchBookDto>
-                ) {
-                    Log.d(TAG, "${response.body()},  keyword ${keyword}")
+            .enqueue(object : Callback<SearchBookDto> {
+                override fun onResponse( call: Call<SearchBookDto>, response: Response<SearchBookDto>) {
+                    hideHistoryView()
+                    saveSearchKeyword(keyword)
                     if (response.isSuccessful.not()) {
                         Log.d(TAG,  "NOT SUCCESSFUL")
                         return
@@ -90,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SearchBookDto>, t: Throwable) {
+                    hideHistoryView()
                     Log.e(TAG, t.toString())
                 }
             })
@@ -101,6 +109,63 @@ class MainActivity : AppCompatActivity() {
         binding.bookRecyclerView.adapter = adapter
     }
 
+    private fun initHistoryRecyclerView() {
+        historyAdapter = HistoryAdapter(historyDeleteClickedLister = {
+            deleteSearchKeyword(it)
+        })
+
+        binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.historyRecyclerView.adapter = adapter
+
+    }
+
+    private fun saveSearchKeyword(keyword: String) {
+        Thread {
+            db.historyDao().insertHistory(History(null, keyword))
+        }.start()
+    }
+
+    private fun deleteSearchKeyword(keyword: String) {
+        Thread {
+            db.historyDao().delete(keyword)
+            //todo view 갱신
+            showHistoryView()
+        }.start()
+    }
+
+    private fun showHistoryView() {
+        Thread {
+            val keywords = db.historyDao().getAll().reversed()
+
+            runOnUiThread {
+                binding.historyRecyclerView.isVisible = true
+                historyAdapter.submitList(keywords.orEmpty())
+            }
+        }.start()
+        binding.historyRecyclerView.isVisible = true
+    }
+
+    private fun hideHistoryView() {
+        binding.historyRecyclerView.isVisible = false
+    }
+
+    private fun initSearchEditText() {
+        binding.searchEditText.setOnKeyListener { view, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == MotionEvent.ACTION_DOWN) {
+                //2번의 키코드 이벤트가 들어온다: 업 & 다운
+                search(binding.searchEditText.text.toString())
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
+
+        binding.searchEditText.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                showHistoryView()
+            }
+            return@setOnTouchListener false
+        }
+    }
     companion object {
         private const val TAG = "MainActivity"
     }

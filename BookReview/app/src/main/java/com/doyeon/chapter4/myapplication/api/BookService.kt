@@ -1,14 +1,14 @@
-package api
+package com.doyeon.chapter4.myapplication.api
 
-import model.BestSellerDto
-import model.SearchBookDto
+import com.doyeon.chapter4.myapplication.model.BestSellerDto
+import com.doyeon.chapter4.myapplication.model.SearchBookDto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BookService {
 
-    @GET("/api/search.api?output=json")
+    @GET("api/search.api?output=json")
     fun getBooksByName(
         @Query("key") apiKey: String,
         @Query("query") keyword: String

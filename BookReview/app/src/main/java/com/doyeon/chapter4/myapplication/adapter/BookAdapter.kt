@@ -1,4 +1,4 @@
-package adapter
+package com.doyeon.chapter4.myapplication.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.doyeon.chapter4.myapplication.databinding.ItemBookBinding
-import model.Book
+import com.doyeon.chapter4.myapplication.model.Book
 
 
 class BookAdapter : ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
