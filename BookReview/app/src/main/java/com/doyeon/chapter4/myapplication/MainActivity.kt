@@ -13,7 +13,6 @@ import com.doyeon.chapter4.myapplication.adapter.HistoryAdapter
 import com.doyeon.chapter4.myapplication.api.BookService
 import com.doyeon.chapter4.myapplication.databinding.ActivityMainBinding
 import com.doyeon.chapter4.myapplication.model.BestSellerDto
-import com.doyeon.chapter4.myapplication.model.Book
 import com.doyeon.chapter4.myapplication.model.History
 import com.doyeon.chapter4.myapplication.model.SearchBookDto
 import retrofit2.Call
@@ -38,9 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initRecyclerView()
+
+        initBookRecyclerView()
         initHistoryRecyclerView()
-        initSearchEditText()
+        //initSearchEditText()
 
         //create database
         db = Room.databaseBuilder(
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    private fun initRecyclerView() {
+    private fun initBookRecyclerView() {
         adapter = BookAdapter()
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.bookRecyclerView.adapter = adapter
@@ -111,11 +111,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun initHistoryRecyclerView() {
         historyAdapter = HistoryAdapter(historyDeleteClickedLister = {
+            Log.d(TAG, "message: ${it}")
             deleteSearchKeyword(it)
         })
 
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.historyRecyclerView.adapter = adapter
+        binding.historyRecyclerView.adapter = historyAdapter
+        initSearchEditText()
 
     }
 
@@ -128,20 +130,22 @@ class MainActivity : AppCompatActivity() {
     private fun deleteSearchKeyword(keyword: String) {
         Thread {
             db.historyDao().delete(keyword)
-            //todo view 갱신
             showHistoryView()
         }.start()
     }
 
     private fun showHistoryView() {
+        Log.d(TAG, "showHistoryView fun called")
         Thread {
             val keywords = db.historyDao().getAll().reversed()
+            Log.d(TAG, "keywords: ${keywords}" )
 
             runOnUiThread {
                 binding.historyRecyclerView.isVisible = true
                 historyAdapter.submitList(keywords.orEmpty())
             }
         }.start()
+
         binding.historyRecyclerView.isVisible = true
     }
 
@@ -151,8 +155,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSearchEditText() {
         binding.searchEditText.setOnKeyListener { view, keyCode, event ->
+
+
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == MotionEvent.ACTION_DOWN) {
                 //2번의 키코드 이벤트가 들어온다: 업 & 다운
+                Log.d(TAG, "key code: ${keyCode}")
                 search(binding.searchEditText.text.toString())
                 return@setOnKeyListener true
             }
@@ -160,7 +167,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.searchEditText.setOnTouchListener { view, motionEvent ->
+            Log.d(TAG, "motionevent = ${MotionEvent.ACTION_DOWN}")
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                Log.d(TAG, "motionevent = true")
+
                 showHistoryView()
             }
             return@setOnTouchListener false
