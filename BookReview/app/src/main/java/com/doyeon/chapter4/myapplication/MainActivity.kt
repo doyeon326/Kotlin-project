@@ -1,5 +1,6 @@
 package com.doyeon.chapter4.myapplication
 
+import android.content.Intent
 import com.doyeon.chapter4.myapplication.adapter.BookAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,11 +44,7 @@ class MainActivity : AppCompatActivity() {
         //initSearchEditText()
 
         //create database
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "BookSearchDB"
-        ).build()
+        db = getAppDatabase(this)
 
         val retrofit =  Retrofit.Builder()
             .baseUrl("https://book.interpark.com")
@@ -104,7 +101,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBookRecyclerView() {
-        adapter = BookAdapter()
+        adapter = BookAdapter(itemClickedListener = {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("bookModel", it) //직렬화 가능
+
+            Log.d(TAG, "${it.title}, ${it.description}")
+            startActivity(intent)
+        })
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.bookRecyclerView.adapter = adapter
     }
