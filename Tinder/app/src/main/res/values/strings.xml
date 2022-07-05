@@ -4,4 +4,6 @@
     <string name="facebook_app_id">697765488236776</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">56789</string>
+    <string name="write_name">이름을 입력해주세요</string>
+    <string name="no_matching_card">매칭할 카드가 없습니다</string>
 </resources>
