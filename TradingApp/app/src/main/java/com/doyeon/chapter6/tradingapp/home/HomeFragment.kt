@@ -1,5 +1,6 @@
 package com.doyeon.chapter6.tradingapp.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.doyeon.chapter6.tradingapp.DBKey.Companion.DB_ARTICLES
 import com.doyeon.chapter6.tradingapp.R
 import com.doyeon.chapter6.tradingapp.databinding.FragmentHomeBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
@@ -58,6 +60,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val fragmentHomeBinding = FragmentHomeBinding.bind(view)
         binding = fragmentHomeBinding
 
+
+
+
+        fragmentHomeBinding.addFloatingButton.setOnClickListener {
+
+            //requireContext() 를 쓰는 이유는 context 가 널일수도 있기때문이다. 만약 쓰려면  context?.let { it.. } 으로 쓸 수 있다.
+            //todo 로그인 기능
+            val intent = Intent(requireContext(), AddArticleActivity::class.java)
+            startActivity(intent)
+            if (auth.currentUser != null) {
+                val intent = Intent(requireContext(), AddArticleActivity::class.java)
+                startActivity(intent)
+            } else {
+                Snackbar.make(view,"로그인 후 사용해 주세요", Snackbar.LENGTH_LONG).show()
+            }
+
+        }
+
+
         articleDB = Firebase.database.reference.child(DB_ARTICLES)
 
         articleAdapter = ArticleAdapter()
@@ -65,10 +86,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 //            add(ArticleModel("0", "aaaa", 1000000, "5000원", "" ))
 //            add(ArticleModel("0", "aaaa", 2000000, "10000원", "" ))
 //        })
-
         fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
-
         articleDB.addChildEventListener(listener)
 
     }
