@@ -2,6 +2,7 @@ package com.doyeon.chapter6.tradingapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.doyeon.chapter6.tradingapp.chatlist.ChatListFragment
 import com.doyeon.chapter6.tradingapp.home.HomeFragment
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         replaceFragment(homeFragment)
 
-        bottomNavigationView.setOnItemReselectedListener {
+        bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> replaceFragment(homeFragment)
                 R.id.chatList -> replaceFragment(chatListFragment)
