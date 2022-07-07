@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .apply {
+                Log.d("MainActivity" , "${fragment}")
                 replace(R.id.fragmentContainer, fragment)
                 commit()
             }

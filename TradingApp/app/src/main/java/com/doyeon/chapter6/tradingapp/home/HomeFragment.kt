@@ -2,6 +2,7 @@ package com.doyeon.chapter6.tradingapp.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,9 +67,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         fragmentHomeBinding.addFloatingButton.setOnClickListener {
 
             //requireContext() 를 쓰는 이유는 context 가 널일수도 있기때문이다. 만약 쓰려면  context?.let { it.. } 으로 쓸 수 있다.
-            //todo 로그인 기능
-            val intent = Intent(requireContext(), AddArticleActivity::class.java)
-            startActivity(intent)
+
+            Log.d("HomeFragment", "current User, ${auth.currentUser}, ${auth.currentUser?.email}")
             if (auth.currentUser != null) {
                 val intent = Intent(requireContext(), AddArticleActivity::class.java)
                 startActivity(intent)
