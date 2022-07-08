@@ -18,7 +18,7 @@ class MyPageFragment: Fragment(R.layout.fragment_mypage)  {
         Firebase.auth
     }
 
-    //todo 회원가입 버튼을 누른후에 로그인을 할경우 textField 가 지워짐. 
+    //todo 회원가입 버튼을 누른후에 로그인을 할경우 textField 가 지워짐.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.doyeon.chapter6.tradingapp.databinding.ItemArticleBinding
 import java.util.*
 
-class ArticleAdapter: ListAdapter<ArticleModel, ArticleAdapter.ViewHolder>(diffUtil) {
+class ArticleAdapter(val onItemClicked: (ArticleModel) -> Unit): ListAdapter<ArticleModel, ArticleAdapter.ViewHolder>(diffUtil) {
         inner class ViewHolder(private val binding: ItemArticleBinding): RecyclerView.ViewHolder(binding.root) {
                 fun bind(articleNModel: ArticleModel) {
 
@@ -24,11 +24,19 @@ class ArticleAdapter: ListAdapter<ArticleModel, ArticleAdapter.ViewHolder>(diffU
                         binding.priceTextView.text = articleNModel.price
 
 
-                        if (articleNModel.imageUrl.isNotEmpty())
-                        Glide.with(binding.thumbnailImageView)
-                                .load(articleNModel.imageUrl)
-                                .into(binding.thumbnailImageView)
+                        if (articleNModel.imageUrl.isNotEmpty()) {
+                                Glide.with(binding.thumbnailImageView)
+                                        .load(articleNModel.imageUrl)
+                                        .into(binding.thumbnailImageView)
+                        }
+
+                        binding.root.setOnClickListener {
+                                onItemClicked(articleNModel)
+                        }
+
                 }
+
+
         }
 
         override fun onCreateViewHolder(
