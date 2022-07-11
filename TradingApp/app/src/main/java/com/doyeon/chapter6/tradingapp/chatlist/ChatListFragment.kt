@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//todo: 채팅방 하나 이상 안나옴..
 class ChatListFragment: Fragment(R.layout.fragment_chatlist)  {
 
     private val auth: FirebaseAuth by lazy {
