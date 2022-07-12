@@ -3,14 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     android:layout_height="match_parent"
     app:behavior_peekHeight = "100dp"
+    android:background="@drawable/top_radius_white_background"
     >
 
+    <View
+        android:layout_width="30dp"
+        android:layout_height="3dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:background="#cccccc"
+        />
+
     <TextView
-        android:background="@color/white"
+
         android:id="@+id/bottomSheetTitleTextView"
         android:layout_width="0dp"
         android:layout_height="100dp"
@@ -26,14 +36,24 @@
 
         />
 
-
     <View
+        android:id="@+id/lineView"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         app:layout_constraintTop_toBottomOf="@+id/bottomSheetTitleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#cccccccc"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/lineView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/teal_700"
+
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,26 +10,26 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class HouseViewPagerAdapter: ListAdapter<HouseModel, HouseViewPagerAdapter.ItemViewHolder> (differ) {
+class HouseListAdapter: ListAdapter<HouseModel, HouseListAdapter.ItemViewHolder> (differ) {
     inner class ItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         fun bind(houseModel: HouseModel) {
             val titleTextView = view.findViewById<TextView>(R.id.titleTextView)
             val priceTextView = view.findViewById<TextView>(R.id.priceTextView)
-            val thumbnailImageView = view.findViewById<ImageView>(R.id.thumbnailImageView)
+            val thumnailImageView = view.findViewById<ImageView>(R.id.thumbnailImageView)
 
             titleTextView.text = houseModel.title
             priceTextView.text = houseModel.price
 
             Glide
-                .with(thumbnailImageView.context)
+                .with(thumnailImageView.context)
                 .load(houseModel.imgUrl)
-                .into(thumbnailImageView)
+                .into(thumnailImageView)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ItemViewHolder(inflater.inflate(R.layout.item_house_detail_for_viewpager, parent, false ))
+        return ItemViewHolder(inflater.inflate(R.layout.item_house, parent, false ))
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
