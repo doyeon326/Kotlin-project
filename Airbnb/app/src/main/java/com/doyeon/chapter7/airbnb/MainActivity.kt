@@ -1,9 +1,11 @@
 package com.doyeon.chapter7.airbnb
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -30,7 +32,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
         findViewById(R.id.houseViewPager)
     }
 
-    private val viewPagerAdapter = HouseViewPagerAdapter()
+    private val bottomSheetTitleTextView: TextView by lazy {
+        findViewById(R.id.bottomSheetTitleTextView)
+    }
+    private val viewPagerAdapter = HouseViewPagerAdapter(itemClicked = {
+        //공유하기
+        val intent = Intent()
+            .apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "[지금 이 가격에 예약하새요!!! ] ${it.title} ${it.price} ${it.imgUrl}")
+                    type = "text/plain"
+            }
+        startActivity(Intent.createChooser(intent, null))
+    })
     private val recyclerAdapter = HouseListAdapter()
 
 
@@ -117,6 +131,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
                             updateMarker(dto.items)
                             viewPagerAdapter.submitList(dto.items)
                             recyclerAdapter.submitList(dto.items)
+
+                            bottomSheetTitleTextView.text = "${dto.items.size}개의 숙소"
                         }
                     }
                     override fun onFailure(call: Call<HouseDto>, t: Throwable) {
