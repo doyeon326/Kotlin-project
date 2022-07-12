@@ -1,5 +1,7 @@
 package com.doyeon.chapter7.airbnb
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class HouseListAdapter: ListAdapter<HouseModel, HouseListAdapter.ItemViewHolder> (differ) {
     inner class ItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
@@ -23,6 +27,8 @@ class HouseListAdapter: ListAdapter<HouseModel, HouseListAdapter.ItemViewHolder>
             Glide
                 .with(thumnailImageView.context)
                 .load(houseModel.imgUrl)
+                .transform(CenterCrop(), RoundedCorners(dpToPx(thumnailImageView.context, 12)))
+                    //센터크롭을 한 이미지를 imageView에 setup
                 .into(thumnailImageView)
         }
     }
@@ -36,6 +42,10 @@ class HouseListAdapter: ListAdapter<HouseModel, HouseListAdapter.ItemViewHolder>
         holder.bind(currentList[position])
     }
 
+
+    private fun dpToPx(context: Context, dp: Int): Int {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(),  context.resources.displayMetrics).toInt()
+    }
 
     companion object {
         val differ = object: DiffUtil.ItemCallback<HouseModel>() {

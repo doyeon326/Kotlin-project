@@ -12,6 +12,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import com.naver.maps.map.widget.LocationButtonView
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -34,6 +35,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val recyclerView: RecyclerView by lazy {
         findViewById(R.id.recyclerView )
+    }
+
+    private val currentLocationButton: LocationButtonView by lazy {
+        findViewById(R.id.currentLocationButton)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +64,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
 
         val uiSetting = naverMap.uiSettings
-        uiSetting.isLocationButtonEnabled = true
+        uiSetting.isLocationButtonEnabled = false
+
+        currentLocationButton.map = naverMap
         //사용자의 위치 사용 권한을 받아야한다. -> manifest
 
         locationSource = FusedLocationSource(this@MainActivity, LOCATION_PERMISSION_REQUEST_CODE)

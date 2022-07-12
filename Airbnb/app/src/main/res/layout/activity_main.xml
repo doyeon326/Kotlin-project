@@ -7,9 +7,19 @@
     tools:context=".MainActivity">
 
     <com.naver.maps.map.MapView
+        android:layout_marginBottom="80dp"
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <com.naver.maps.map.widget.LocationButtonView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:id="@+id/currentLocationButton"
+        android:layout_gravity="top|start"
+        />
+
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/houseViewPager"
