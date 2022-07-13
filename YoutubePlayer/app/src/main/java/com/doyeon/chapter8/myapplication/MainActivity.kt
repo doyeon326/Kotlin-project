@@ -3,6 +3,9 @@ package com.doyeon.chapter8.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.doyeon.chapter8.myapplication.adapter.VideoAdapter
 import com.doyeon.chapter8.myapplication.dto.VideoDto
 import com.doyeon.chapter8.myapplication.service.VideoService
 import retrofit2.Call
@@ -13,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var videoAdapter: VideoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +25,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, PlayerFragment())
             .commit()
+
+        videoAdapter = VideoAdapter()
+
+        findViewById<RecyclerView>(R.id.mainRecyclerView).apply {
+            adapter = videoAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
 
         getVideoList()
     }
@@ -40,9 +51,12 @@ class MainActivity : AppCompatActivity() {
                             Log.d("MainActivity", "response Fail")
                             return
                         }
-                        response.body()?.let {
+                        response.body()?.let { videoDto ->
                             Log.d("MainActivity", "${it.toString()}")
+                            videoAdapter.submitList(videoDto.videos)
                         }
+
+
                     }
 
                     override fun onFailure(call: Call<VideoDto>, t: Throwable) {
