@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.doyeon.chapter8.myapplication.CustomMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/playerMotionLayout"
     android:layout_height="match_parent"
@@ -10,19 +11,20 @@
         android:id="@+id/mainContainerLayout"
         android:layout_width="0dp"
         android:layout_height="250dp"
-        android:background="@color/purple_200"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/playerView"
+        app:resize_mode="fill"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/mainContainerLayout"
         app:layout_constraintStart_toStartOf="@id/mainContainerLayout"
         app:layout_constraintTop_toTopOf="@id/mainContainerLayout"
-        android:background="#00ff00"
+
         />
 
     <ImageView
@@ -30,12 +32,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
+        tools:src="@drawable/play"
         app:layout_constraintBottom_toBottomOf="@id/mainContainerLayout"
         app:layout_constraintEnd_toEndOf="@id/mainContainerLayout"
         app:layout_constraintTop_toTopOf="@id/mainContainerLayout" />
 
     <TextView
         android:id="@+id/bottomTitleTextView"
+        android:textColor="@color/black"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -44,22 +48,25 @@
         android:maxLines="1"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="@id/bottomPlayerControlButton"
+
         app:layout_constraintEnd_toStartOf="@id/bottomPlayerControlButton"
         app:layout_constraintStart_toEndOf="@id/playerView"
-        app:layout_constraintTop_toTopOf="@id/bottomPlayerControlButton" />
+        app:layout_constraintTop_toTopOf="@id/bottomPlayerControlButton"
+        tools:text="제목입니다" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragmentRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"
+        android:padding="16dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mainContainerLayout"
-        android:nestedScrollingEnabled="false"
-        android:clipToPadding="false"
-        android:padding="16dp"
-        />
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
 </com.doyeon.chapter8.myapplication.CustomMotionLayout>
