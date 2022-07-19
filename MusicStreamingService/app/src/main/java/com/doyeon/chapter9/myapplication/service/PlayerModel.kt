@@ -1,5 +1,7 @@
 package com.doyeon.chapter9.myapplication.service
 
+import android.util.Log
+
 data class PlayerModel(
     private val playMusicList: List<MusicModel> = emptyList(),
     var currentPosition: Int = -1,
@@ -17,6 +19,8 @@ data class PlayerModel(
 
     fun updateCurrentPosition(musicModel: MusicModel) {
         currentPosition = playMusicList.indexOf(musicModel)
+        Log.d("PlayerModel", "updateCurrentPosition = ${currentPosition}")
+
     }
 
     fun nextMusic(): MusicModel? {
@@ -30,6 +34,11 @@ data class PlayerModel(
         if (playMusicList.isEmpty()) return null
 
         currentPosition = if ((currentPosition - 1 ) < 0 ) playMusicList.lastIndex else currentPosition - 1
+        return playMusicList[currentPosition]
+    }
+
+    fun currentMusicModel(): MusicModel? {
+        if (playMusicList.isEmpty()) return null
         return playMusicList[currentPosition]
     }
 
