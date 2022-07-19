@@ -8,3 +8,11 @@ fun MusicEntity.mapper(id: Long): MusicModel =
         track = this.track,
         artist = this.artist
     )
+
+fun MusicDto.mapper(): PlayerModel =
+    PlayerModel(
+        playMusicList = musics.mapIndexed() { index, musicEntity ->
+
+            musicEntity.mapper(index.toLong())
+        }
+    )

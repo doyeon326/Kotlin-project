@@ -20,9 +20,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class PlayerFragment: Fragment(R.layout.fragment_player) {
+
+    private var model = PlayerModel()
     private var binding: FragmentPlayerBinding? = null
-    private var isWatchingPlayListView: Boolean = true
-    private lateinit var playListAdapter: PlayListAdapter
+
+    private lateinit  var playListAdapter: PlayListAdapter
     private var simplePlayer: SimpleExoPlayer? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,17 +51,20 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         }
 
         fragmentPlayerBinding.skipNextImageView.setOnClickListener {
-
+            val nextMusic = model.nextMusic() ?: return@setOnClickListener
+            playMusic(nextMusic)
         }
 
         fragmentPlayerBinding.skipPreviousImageView.setOnClickListener {
-
+            val prevMusic = model.prevNextMusic() ?: return@setOnClickListener
+            playMusic(prevMusic)
         }
     }
 
     private fun initRecyclerView(fragmentPlayerBinding: FragmentPlayerBinding) {
         playListAdapter = PlayListAdapter {
             //todo 음악을 재생
+            playMusic(it)
 
         }
         fragmentPlayerBinding.playerListRecyclerView.apply {
@@ -72,10 +77,13 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
     private fun initPlayListButton(fragmentPlayerBinding: FragmentPlayerBinding) {
          fragmentPlayerBinding.playlistImageView.setOnClickListener {
              //todo 만약 서버에서 데이터가 다 불러오지 않은 생태일 때
-             fragmentPlayerBinding.playerViewGroup.isVisible = isWatchingPlayListView
-             fragmentPlayerBinding.playListViewGroup.isVisible = isWatchingPlayListView.not()
+             if (model.currentPosition == -1 ){
+                  return@setOnClickListener
+             }
+             fragmentPlayerBinding.playerViewGroup.isVisible = model.isWatchingPlayListView
+             fragmentPlayerBinding.playListViewGroup.isVisible = model.isWatchingPlayListView.not()
 
-             isWatchingPlayListView = !isWatchingPlayListView
+             model.isWatchingPlayListView = !model.isWatchingPlayListView
          }
     }
 
@@ -97,15 +105,12 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
 
                             Log.d("PlayerFragment","${response.body() }")
 
-                            response.body()?.let {
-                                val modelList = it.musics.mapIndexed() { index, musicEntity ->
-                                    Log.d("PlayerFragment","index: ${musicEntity}")
+                            response.body()?.let { musicDto ->
 
-                                    musicEntity.mapper(index.toLong())
-                                }
-                                //Log.d("PlayerFragment","modelList: ${modelList}")
-                                setMusicList(modelList)
-                                playListAdapter.submitList(modelList)
+                                model = musicDto.mapper()
+
+                                setMusicList(model.getAdapterModels() )
+                                playListAdapter.submitList(model.getAdapterModels())
                             }
                         }
 
@@ -128,8 +133,14 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
            })
 
            simplePlayer?.prepare()
-           simplePlayer?.play()
+           //simplePlayer?.play()
        }
+    }
+
+    private fun playMusic(musicModel: MusicModel) {
+        model.updateCurrentPosition(musicModel)
+        simplePlayer?.seekTo(model.currentPosition, 0)
+        simplePlayer?.play()
     }
 
     private fun initPlayerView(fragmentPlayerBinding: FragmentPlayerBinding) {
@@ -148,6 +159,16 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
                     } else {
                         binding.playControlImageView.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                     }
+
+
+                }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(mediaItem, reason)
+                     val newIndex = mediaItem?.mediaId ?: return
+                    model.currentPosition = newIndex.toInt()
+                    playListAdapter.submitList(model.getAdapterModels() )
+
                 }
             })
 
