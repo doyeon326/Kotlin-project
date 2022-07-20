@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.doyeon.chapter10.searchaddress.databinding.ActivityMainBinding
+import com.doyeon.chapter10.searchaddress.model.LocationLatLngEntity
+import com.doyeon.chapter10.searchaddress.model.SearchResultEntity
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         initAdapter()
         initViews()
+        initData()
+        setData()
 
     }
 
@@ -34,8 +38,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        adapter = SearchRecyclerAdapter{
-            Toast.makeText(this,"클릭이 되었습니다", Toast.LENGTH_SHORT).show()
+        adapter = SearchRecyclerAdapter()
+    }
+
+    private fun initData() {
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun setData() {
+        val dataList = (0..10).map {
+            SearchResultEntity(
+                name = "빌딩 ${it}",
+                fullAddress = "주소 ${it}",
+                locationLatLng = LocationLatLngEntity(
+                    latitude = it.toFloat(),
+                    longitude = it.toFloat()
+                )
+            )
         }
+        adapter.setSearchResultList(dataList) {
+            Toast.makeText(this, "빌딩이름: ${it.name}, 주소: ${it.fullAddress}", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
