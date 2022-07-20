@@ -1,10 +1,6 @@
 package com.doyeon.chapter10.searchaddress.utility
 
-
-import android.content.res.Resources
-import android.provider.Settings.Secure.getString
 import com.doyeon.chapter10.searchaddress.Key
-import com.doyeon.chapter10.searchaddress.R
 import com.doyeon.chapter10.searchaddress.Url
 import com.doyeon.chapter10.searchaddress.response.search.SearchResponse
 import retrofit2.Response

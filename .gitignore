@@ -180,4 +180,5 @@ TodaysQuote/app/google-services.json
 BookReview/app/src/main/res/values.api_key.xml
 Airbnb/app/src/main/res/values/api_key.xml
 SearchAddress/app/src/main/java/com/doyeon/chapter10/searchaddress/Key.kt
+SearchAddress/app/src/main/res/values/api_key.xml
 

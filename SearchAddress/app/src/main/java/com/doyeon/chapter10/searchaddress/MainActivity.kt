@@ -1,5 +1,6 @@
 package com.doyeon.chapter10.searchaddress
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -76,6 +77,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
         adapter.setSearchResultList(dataList) {
             Toast.makeText(this, "빌딩이름: ${it.name}, 주소: ${it.fullAddress} 위도: ${it.locationLatLng}", Toast.LENGTH_SHORT).show()
+            startActivity(
+                Intent(this, MapActivity::class.java)
+            )
+
         }
 
     }
