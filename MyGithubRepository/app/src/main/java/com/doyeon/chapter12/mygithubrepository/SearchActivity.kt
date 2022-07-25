@@ -1,5 +1,6 @@
 package com.doyeon.chapter12.mygithubrepository
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -69,6 +70,13 @@ class SearchActivity : AppCompatActivity(), CoroutineScope {
     private fun setData(items: List<GithubRepoEntity>) {
         adapter.setRepositoryList(items) {
             Toast.makeText(this, "entity: $it", Toast.LENGTH_SHORT).show()
+
+            startActivity(
+                Intent(this@SearchActivity, RepositoryActivity::class.java).apply {
+                    putExtra(RepositoryActivity.REPOSITORY_OWNER_KEY, it.owner.login)
+                    putExtra(RepositoryActivity.REPOSITORY_NAME_KEY, it.name)
+                }
+            )
         }
 
     }
