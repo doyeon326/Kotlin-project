@@ -1,5 +1,6 @@
 package com.doyeon.chapter12.mygithubrepository
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -38,7 +39,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 Log.e("repositories", gitHubRepositories.toString())
             }
         }
+        initViews()
 
+    }
+
+    private fun initViews() = with(binding){
+        searchButton.setOnClickListener {
+            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+        }
     }
 
     private suspend fun loadGithubRepositories() = withContext(Dispatchers.IO) {

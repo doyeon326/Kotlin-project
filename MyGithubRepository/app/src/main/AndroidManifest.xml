@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyGithubRepository"
         tools:targetApi="31">
-
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".SignInActivity"
             android:exported="true"
