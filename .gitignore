@@ -183,3 +183,5 @@ SearchAddress/app/src/main/java/com/doyeon/chapter10/searchaddress/Key.kt
 SearchAddress/app/src/main/res/values/api_key.xml
 MyGithubRepository/gradle.properties
 MyGithubRepository/app/build/generated/source/buildConfig/debug/com/doyeon/chapter12/mygithubrepository/BuildConfig.java
+EnvironmentPollution/gradle.properties
+EnvironmentPollution/app/build/generated/source/buildConfig/debug/com/doyeon/chapter12/environmentpollution/BuildConfig.java
