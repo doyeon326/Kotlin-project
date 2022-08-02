@@ -3,8 +3,10 @@ package com.doyeon.chapter13.environmentpollution
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     val scope = MainScope()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var cancellationTokenSource: CancellationTokenSource ?= null
+    private var cancellationTokenSource: CancellationTokenSource? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -61,14 +63,32 @@ class MainActivity : AppCompatActivity() {
             requestCode == REQUEST_ACCESS_LOCATION_PERMISSIONS &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
 
-        if ( !locationPermissionGranted) {
-            finish()
+        val backgroundLocationPermissionGranted =
+            requestCode == REQUEST_ACCESS_BACKGROUND_LOCATION_PERMISSIONS &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!backgroundLocationPermissionGranted) {
+                requestBackgroundLocationPermissions()
+            } else {
+                fetchAirQualityData()
+            }
+
         } else {
-            fetchAirQualityData()
+            if (!locationPermissionGranted) {
+                finish()
+            } else {
+                fetchAirQualityData()
+            }
         }
+
+
     }
 
-    private fun displayAirQualityData(monitoringStation: MonitoringStation, measuredValue: MeasuredValue) {
+    private fun displayAirQualityData(
+        monitoringStation: MonitoringStation,
+        measuredValue: MeasuredValue
+    ) {
         binding.contentsLayout.animate()
             .alpha(1F)
             .start()
@@ -77,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         binding.measuringStationAddressTextView.text = monitoringStation.addr
 
         (measuredValue.khaiGrade ?: Grade.UNKNOWN).let { grade ->
+            Log.d("displayAirQualityData", "${grade.colorResId}")
             binding.root.setBackgroundResource(grade.colorResId)
             binding.totalGradeEmojiTextView.text = grade.emoji
             binding.totalGradeLabelTextView.text = grade.label
@@ -116,7 +137,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
 
     private fun requestLocationPermissions() {
@@ -130,6 +150,16 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private fun requestBackgroundLocationPermissions() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ),
+            REQUEST_ACCESS_BACKGROUND_LOCATION_PERMISSIONS
+        )
+    }
+
     private fun initVariables() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
@@ -139,7 +169,8 @@ class MainActivity : AppCompatActivity() {
 
         //fetching data
         cancellationTokenSource = CancellationTokenSource()
-        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,
+        fusedLocationProviderClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
             cancellationTokenSource!!.token
         ).addOnSuccessListener { location ->
             //binding.textView.text = "${location.latitude}, ${location.longitude}"
@@ -156,13 +187,13 @@ class MainActivity : AppCompatActivity() {
                     //binding.textView.text = measuredValue.toString()
 
                     displayAirQualityData(monitoringStation, measuredValue!!)
-                }catch (exception: Exception) {
+                } catch (exception: Exception) {
                     binding.errorDescriptionTextView.visibility = View.VISIBLE
                     binding.contentsLayout.alpha = 0F
                 } finally {
                     binding.progressBar.visibility = View.GONE
                     binding.refresh.isRefreshing = false
-                 }
+                }
             }
         }
     }
@@ -173,7 +204,9 @@ class MainActivity : AppCompatActivity() {
             fetchAirQualityData()
         }
     }
+
     companion object {
         private const val REQUEST_ACCESS_LOCATION_PERMISSIONS = 100
+        private const val REQUEST_ACCESS_BACKGROUND_LOCATION_PERMISSIONS = 101
     }
 }
