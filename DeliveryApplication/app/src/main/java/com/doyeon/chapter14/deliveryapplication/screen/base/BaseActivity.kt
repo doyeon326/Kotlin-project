@@ -26,6 +26,7 @@ abstract class BaseActivity<VM: BaseViewModel, VB: ViewBinding> : AppCompatActiv
         fetchJob = viewModel.fetchData()
         observeData()
     }
+
     open fun initViews() = Unit //뷰초기화
     abstract fun observeData() //데이터 관찰
 
