@@ -24,17 +24,17 @@
 
         <TextView
             android:id="@+id/titleTextView"
-            app:layout_constraintStart_toEndOf="@+id/thumbnailImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
-            tools:text="강남역 최저가!!!! 강남역  최저가!!! "
             android:maxLines="2"
-            android:layout_marginStart="12dp"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/thumbnailImageView"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            tools:text="강남역 최저가!!!! 강남역  최저가!!! " />
 
         <TextView
             android:id="@+id/priceTextView"

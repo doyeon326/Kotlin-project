@@ -8,9 +8,10 @@ import com.doyeon.chapter14.deliveryapplication.screen.base.BaseViewModel
 import com.doyeon.chapter14.deliveryapplication.util.mapper.ModelViewHolderMapper
 import com.doyeon.chapter14.deliveryapplication.util.provider.ResourcesProvider
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.listener.AdapterListener
+import com.doyeon.chapter14.deliveryapplication.widget.adapter.listener.RestaurantListListener
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.viewholder.ModelViewHolder
 
-class ModelRecyclerAdapter<M: Model, VM: BaseViewModel> (
+class ModelRecyclerAdapter<M: Model, VM: BaseViewModel>(
     private var modelList: List<Model>,
     private val viewModel: VM,
     private val resourcesProvider: ResourcesProvider,
@@ -34,7 +35,7 @@ class ModelRecyclerAdapter<M: Model, VM: BaseViewModel> (
         }
     }
 
-    override fun submitList(list: MutableList<Model>?) {
+    override fun submitList(list: List<Model>?) {
         list?.let { modelList = it }
         super.submitList(list)
     }
