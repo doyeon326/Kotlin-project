@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewParent
 import com.doyeon.chapter14.deliveryapplication.databinding.ViewholderEmptyBinding
+import com.doyeon.chapter14.deliveryapplication.databinding.ViewholderRestaurantBinding
 import com.doyeon.chapter14.deliveryapplication.model.CellType
 import com.doyeon.chapter14.deliveryapplication.model.Model
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseViewModel
 import com.doyeon.chapter14.deliveryapplication.util.provider.ResourcesProvider
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.viewholder.EmptyViewHolder
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.viewholder.ModelViewHolder
+import com.doyeon.chapter14.deliveryapplication.widget.adapter.viewholder.restaurant.RestaurantViewHolder
 
 object ModelViewHolderMapper {
     @Suppress("UNCHECKED_CAST")
@@ -23,6 +25,11 @@ object ModelViewHolderMapper {
         val viewHolder = when (type) {
             CellType.EMPTY_CELL -> EmptyViewHolder(
                 ViewholderEmptyBinding.inflate(inflater, parent, false),
+                viewModel,
+                resourcesProvider
+            )
+            CellType.RESTAURANT_CELL -> RestaurantViewHolder(
+                ViewholderRestaurantBinding.inflate(inflater,parent,false),
                 viewModel,
                 resourcesProvider
             )
