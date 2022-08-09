@@ -35,6 +35,8 @@ class RestaurantViewHolder(
             reviewCountText.text =
                 resourcesProvider.getString(R.string.review_count, model.reviewCount)
             val (minTip, maxTip) = model.deliveryTimeRange
+            val (minTime, maxTime) = model.deliveryTimeRange
+            deliveryTimeText.text = resourcesProvider.getString(R.string.delivery_time, minTime, maxTime)
             deliveryTipText.text =
                 resourcesProvider.getString(R.string.low_delivery_tip, minTip, maxTip)
 
