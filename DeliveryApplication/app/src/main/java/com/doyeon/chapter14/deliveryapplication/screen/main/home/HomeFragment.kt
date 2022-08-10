@@ -9,7 +9,10 @@ import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.doyeon.chapter14.deliveryapplication.R
+import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.databinding.FragmentHomeBinding
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseFragment
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
@@ -45,12 +48,9 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }
         }
 
-    override fun initViews() {
-        super.initViews()
-        initViewPager()
-    }
 
-    private fun initViewPager() = with(binding) {
+
+    private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
 
         val restaurantCategories = RestaurantCategory.values()
         Log.d("initViewPager()", "${restaurantCategories.size}")
@@ -79,9 +79,37 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
 
     override fun observeData() = viewModel.homeSateLiveData.observe(viewLifecycleOwner){
+        Log.d(TAG, "HomeFragment - observeData() called ${it}")
         when (it) {
+
             HomeState.Uninitialized -> {
                 getMyLocation()
+            }
+            HomeState.Loading -> {
+                binding.locationLoading.isVisible = true
+                binding.locationTitleText.text = getString(R.string.loading)
+            }
+
+            is HomeState.Success -> {
+                binding.locationLoading.isVisible = true
+                binding.locationTitleText.text = it.mapSearchInfoEntity.fullAddress
+                binding.tabLayout.isVisible = true
+                binding.filterScrollView.isVisible = true
+                binding.viewPager.isVisible = true
+                initViewPager(it.mapSearchInfoEntity.locationLatLng)
+
+            }
+
+            is HomeState.Error -> {
+                binding.locationLoading.isGone = true
+                binding.locationTitleText.setText(R.string.location_not_found)
+                binding.locationTitleText.setOnClickListener {
+                    getMyLocation()
+                }
+                Toast.makeText(requireContext(), it.messageId, Toast.LENGTH_SHORT).show()
+
+
+
             }
         }
     }
@@ -135,7 +163,17 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     inner class MyLocationListener: LocationListener {
         override fun onLocationChanged(location: Location) {
-            binding.locationTitleText.text = "${location.latitude},${location.longitude}"
+           // binding.locationTitleText.text = ""
+            Log.d(TAG, "onLocationChanged:${location.latitude},${location.longitude} ")
+            viewModel.loadReverseGeoInformation(
+                LocationLatLngEntity(
+                    37.421545,
+                    127.0276
+//                    location.latitude,
+//                    location.longitude
+                )
+            )
+            removeLocationListener()
         }
     }
 }

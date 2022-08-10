@@ -1,5 +1,7 @@
 package com.doyeon.chapter14.deliveryapplication.di
 
+import com.doyeon.chapter14.deliveryapplication.data.network.MapApiService
+import com.doyeon.chapter14.deliveryapplication.data.url.Url
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.BuildConfig
@@ -7,12 +9,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-fun provideRetrofit(
+fun provideMapApiService(retrofit:Retrofit): MapApiService {
+    return retrofit.create(MapApiService::class.java)
+}
+
+fun provideMapRetrofit(
     okHttpClient: OkHttpClient,
     gsonConverterFactory: GsonConverterFactory
 ): Retrofit {
     return Retrofit.Builder()
-        .baseUrl("")
+        .baseUrl(Url.TMAP_URL)
         .addConverterFactory(gsonConverterFactory)
         .client(okHttpClient)
         .build()

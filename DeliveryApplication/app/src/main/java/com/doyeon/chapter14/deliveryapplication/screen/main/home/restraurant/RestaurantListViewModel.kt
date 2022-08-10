@@ -1,10 +1,8 @@
 package com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.doyeon.chapter14.deliveryapplication.data.entity.RestaurantEntity
-import com.doyeon.chapter14.deliveryapplication.data.repository.RestaurantRepository
+import com.doyeon.chapter14.deliveryapplication.data.repository.restaurant.RestaurantRepository
 import com.doyeon.chapter14.deliveryapplication.model.restaurant.RestaurantModel
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseViewModel
 import kotlinx.coroutines.Job

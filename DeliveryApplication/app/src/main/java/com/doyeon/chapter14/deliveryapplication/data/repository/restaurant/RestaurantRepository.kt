@@ -1,4 +1,4 @@
-package com.doyeon.chapter14.deliveryapplication.data.repository
+package com.doyeon.chapter14.deliveryapplication.data.repository.restaurant
 
 import com.doyeon.chapter14.deliveryapplication.data.entity.RestaurantEntity
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
