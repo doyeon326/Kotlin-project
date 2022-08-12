@@ -1,5 +1,6 @@
 package com.doyeon.chapter14.deliveryapplication.di
 
+import com.doyeon.chapter14.deliveryapplication.data.entity.MapSearchInfoEntity
 import com.doyeon.chapter14.deliveryapplication.data.repository.map.DefaultMapRepository
 import com.doyeon.chapter14.deliveryapplication.data.repository.map.MapRepository
 import com.doyeon.chapter14.deliveryapplication.data.repository.restaurant.DefaultRestaurantRepository
@@ -8,6 +9,7 @@ import com.doyeon.chapter14.deliveryapplication.screen.main.home.HomeViewModel
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.MyViewModel
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantListViewModel
+import com.doyeon.chapter14.deliveryapplication.screen.mylocation.MyLocationViewModel
 import com.doyeon.chapter14.deliveryapplication.util.provider.DefaultResourcesProvider
 import com.doyeon.chapter14.deliveryapplication.util.provider.ResourcesProvider
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +22,7 @@ val appModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MyViewModel() }
     viewModel { (restaurantCategory: RestaurantCategory) -> RestaurantListViewModel( restaurantCategory , get())}
+    viewModel { (mapsSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapsSearchInfoEntity, get())}
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get())  }
     single<MapRepository> { DefaultMapRepository(get(), get())}

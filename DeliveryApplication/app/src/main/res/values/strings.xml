@@ -18,4 +18,5 @@
     <string name="can_not_load_address_info">위치를 불러올수 없습니다</string>
     <string name="loading">로딩중..</string>
     <string name="location_not_found">위치 정보 없음</string>
+    <string name="set_this_location">이 위치로 주소 설정</string>
 </resources>

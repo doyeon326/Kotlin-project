@@ -2,7 +2,9 @@ package com.doyeon.chapter14.deliveryapplication.screen.main.home
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -13,10 +15,12 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.doyeon.chapter14.deliveryapplication.R
 import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
+import com.doyeon.chapter14.deliveryapplication.data.entity.MapSearchInfoEntity
 import com.doyeon.chapter14.deliveryapplication.databinding.FragmentHomeBinding
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseFragment
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantListFragment
+import com.doyeon.chapter14.deliveryapplication.screen.mylocation.MyLocationActivity
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.RestaurantListFragmentPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +33,17 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     private lateinit var viewPagerAdapter: RestaurantListFragmentPagerAdapter
     private lateinit var locationManager: LocationManager
     private lateinit var myLocationListener: MyLocationListener
+
+    private val changeLocationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if ( result.resultCode == Activity.RESULT_OK) {
+                result.data?.getParcelableExtra<MapSearchInfoEntity>(HomeViewModel.MY_LOCATION_KEY)?.let { myLocationInfo ->
+                    viewModel.loadReverseGeoInformation(myLocationInfo.locationLatLng)
+
+                }
+            }
+        }
+
     private var locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val responsePermission = permissions.entries.filter {
@@ -48,12 +63,24 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }
         }
 
+    override fun initViews() = with(binding){
+        Log.d(TAG, "HomeFragment - initViews() called")
+        locationTitleText.setOnClickListener{
+            Log.d(TAG, "HomeFragment - initViews() clicked called")
+            viewModel.getMapSearchInfo()?.let { mapInfo ->
+                changeLocationLauncher.launch(
+                    MyLocationActivity.newIntent(
+                        requireContext(), mapInfo
+                    )
+                )
+            }
+        }
+    }
 
 
     private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
 
         val restaurantCategories = RestaurantCategory.values()
-        Log.d("initViewPager()", "${restaurantCategories.size}")
         if(::viewPagerAdapter.isInitialized.not()) {
 
             val restaurantListFragmentList = restaurantCategories.map {
@@ -91,11 +118,20 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }
 
             is HomeState.Success -> {
-                binding.locationLoading.isVisible = true
+                binding.locationLoading.isGone = true
                 binding.locationTitleText.text = it.mapSearchInfoEntity.fullAddress
                 binding.tabLayout.isVisible = true
                 binding.filterScrollView.isVisible = true
                 binding.viewPager.isVisible = true
+                binding.locationTitleText.setOnClickListener {
+                    viewModel.getMapSearchInfo()?.let { mapInfo ->
+                        changeLocationLauncher.launch(
+                            MyLocationActivity.newIntent(
+                                requireContext(), mapInfo
+                            )
+                        )
+                    }
+                }
                 initViewPager(it.mapSearchInfoEntity.locationLatLng)
 
             }
@@ -167,13 +203,12 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             Log.d(TAG, "onLocationChanged:${location.latitude},${location.longitude} ")
             viewModel.loadReverseGeoInformation(
                 LocationLatLngEntity(
-                    37.421545,
-                    127.0276
-//                    location.latitude,
-//                    location.longitude
+                    location.latitude,
+                    location.longitude
                 )
             )
-            removeLocationListener()
+            //todo remove location listenr
+         //   removeLocationListener()
         }
     }
 }
