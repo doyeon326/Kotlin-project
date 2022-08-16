@@ -64,9 +64,7 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
 
     override fun initViews() = with(binding){
-        Log.d(TAG, "HomeFragment - initViews() called")
         locationTitleText.setOnClickListener{
-            Log.d(TAG, "HomeFragment - initViews() clicked called")
             viewModel.getMapSearchInfo()?.let { mapInfo ->
                 changeLocationLauncher.launch(
                     MyLocationActivity.newIntent(
@@ -79,13 +77,12 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
 
     private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
-
         val restaurantCategories = RestaurantCategory.values()
         if(::viewPagerAdapter.isInitialized.not()) {
-
-            val restaurantListFragmentList = restaurantCategories.map {
-                RestaurantListFragment.newInstance(it, locationLatLng)
+            val restaurantListFragmentList = restaurantCategories.map { category ->
+                RestaurantListFragment.newInstance(category, locationLatLng)
             }
+
 
             viewPagerAdapter = RestaurantListFragmentPagerAdapter(
                 this@HomeFragment,
@@ -94,10 +91,8 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             )
             viewPager.adapter = viewPagerAdapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-
                 tab.setText(restaurantCategories[position].categoryNameId)
             }.attach()
-
         }
         if (locationLatLng != viewPagerAdapter.locationLatLngEntity) {
             viewPagerAdapter.locationLatLngEntity = locationLatLng
@@ -105,16 +100,11 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 it.viewModel.setLocationLatLng(locationLatLng)
             }
         }
-
-
-
-
     }
 
 
 
     override fun observeData() = viewModel.homeSateLiveData.observe(viewLifecycleOwner){
-        Log.d(TAG, "HomeFragment - observeData() called ${it}")
         when (it) {
 
             HomeState.Uninitialized -> {
@@ -140,7 +130,11 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                         )
                     }
                 }
+
                 initViewPager(it.mapSearchInfoEntity.locationLatLng)
+                if (it.isLocationSame.not()) {
+                    Toast.makeText(requireContext(), R.string.please_setup_your_location_permission, Toast.LENGTH_SHORT).show()
+                }
 
             }
 

@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class RestaurantListFragment: BaseFragment<RestaurantListViewModel, FragmentRestaurantListBinding>(){
-
+    //햇갈리는 부분 https://stackoverflow.com/questions/56436705/how-to-add-a-fragments-argument-item-to-koin-dependency-graph
     private val restaurantCategory by lazy { arguments?.getSerializable(RESTAURANT_CATEGORY_KEY) as RestaurantCategory }
     private val locationLatLng by lazy { arguments?.getParcelable<LocationLatLngEntity>(LOCATION_KEY)}
 
@@ -33,8 +33,6 @@ class RestaurantListFragment: BaseFragment<RestaurantListViewModel, FragmentRest
                 override fun oncClickItem(model: RestaurantModel) {
                     Toast.makeText(requireContext(), "$model", Toast.LENGTH_SHORT).show()
                 }
-
-
             })
     }
 

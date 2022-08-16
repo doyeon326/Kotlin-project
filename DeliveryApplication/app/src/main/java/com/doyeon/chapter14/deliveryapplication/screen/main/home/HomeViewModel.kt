@@ -7,11 +7,13 @@ import com.doyeon.chapter14.deliveryapplication.R
 import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.data.entity.MapSearchInfoEntity
 import com.doyeon.chapter14.deliveryapplication.data.repository.map.MapRepository
+import com.doyeon.chapter14.deliveryapplication.data.repository.user.UserRepository
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseViewModel
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val mapRepository: MapRepository
+    private val mapRepository: MapRepository,
+    private val userRepository: UserRepository
     ): BaseViewModel() {
 
     companion object {
@@ -23,12 +25,16 @@ class HomeViewModel(
         locationLatLngEntity: LocationLatLngEntity
     ) = viewModelScope.launch{
         homeSateLiveData.value = HomeState.Loading
-       val addressInfo = mapRepository.getReverseGeoInformation(locationLatLngEntity)
+
+        val userLocation = userRepository.getUserLocation()
+        val currentLocation = userLocation ?: locationLatLngEntity
+       val addressInfo = mapRepository.getReverseGeoInformation(currentLocation)
 
         addressInfo?.let { info ->
 
             homeSateLiveData.value = HomeState.Success(
-                mapSearchInfoEntity = info.toSearchInfoEntity(locationLatLngEntity)
+                mapSearchInfoEntity = info.toSearchInfoEntity(locationLatLngEntity),
+                isLocationSame =  currentLocation == locationLatLngEntity
             )
 
         }?: kotlin.run {

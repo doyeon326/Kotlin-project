@@ -6,6 +6,8 @@ import com.doyeon.chapter14.deliveryapplication.data.repository.map.DefaultMapRe
 import com.doyeon.chapter14.deliveryapplication.data.repository.map.MapRepository
 import com.doyeon.chapter14.deliveryapplication.data.repository.restaurant.DefaultRestaurantRepository
 import com.doyeon.chapter14.deliveryapplication.data.repository.restaurant.RestaurantRepository
+import com.doyeon.chapter14.deliveryapplication.data.repository.user.DefaultUserRepository
+import com.doyeon.chapter14.deliveryapplication.data.repository.user.UserRepository
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.HomeViewModel
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.MyViewModel
 import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
@@ -20,13 +22,14 @@ import org.koin.dsl.module
 
 val appModule = module {
     //koin DI 셋업
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { MyViewModel() }
     viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) -> RestaurantListViewModel( restaurantCategory , locationLatLng, get())}
-    viewModel { (mapsSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapsSearchInfoEntity, get())}
+    viewModel { (mapsSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapsSearchInfoEntity, get(), get())}
 
     single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get())  }
     single<MapRepository> { DefaultMapRepository(get(), get())}
+    single<UserRepository> { DefaultUserRepository(get(), get())  }
 
     single { provideGsonConvertFactory() }
     single { buildOkHttpClient() }
@@ -34,6 +37,9 @@ val appModule = module {
     single { provideMapRetrofit(get(), get()) }
 
     single { provideMapApiService(get()) }
+
+    single { provideDB(androidApplication()) }
+    single { provideLocationDao(get()) }
 
     single<ResourcesProvider> { DefaultResourcesProvider(androidApplication()) }
 

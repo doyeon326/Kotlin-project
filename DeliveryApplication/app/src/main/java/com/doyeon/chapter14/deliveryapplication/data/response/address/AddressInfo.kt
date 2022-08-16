@@ -59,7 +59,7 @@ data class AddressInfo(
     fun toSearchInfoEntity(locationLatLngEntity: LocationLatLngEntity) = MapSearchInfoEntity(
         fullAddress = fullAddress?: "주소 정보 없음",
         name = buildingName?: "빌딩 정보 없음",
-        locationLatLng = locationLatLngEntity
+        locationLatLng = locationLatLngEntity,
 
     )
 }

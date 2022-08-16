@@ -19,4 +19,5 @@
     <string name="loading">로딩중..</string>
     <string name="location_not_found">위치 정보 없음</string>
     <string name="set_this_location">이 위치로 주소 설정</string>
+    <style name="please_set_your_current_location">위치가 맞는지 확인해주세요!</style>
 </resources>

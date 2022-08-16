@@ -10,7 +10,8 @@ sealed class HomeState {
 
  //   object Success: HomeState() // data class 는 무조건 하나 이상의 프로퍼티를 가져야한다.
     data class Success(
-       val mapSearchInfoEntity: MapSearchInfoEntity
+       val mapSearchInfoEntity: MapSearchInfoEntity,
+       val isLocationSame: Boolean
     ): HomeState()
 
     data class Error(
