@@ -2,6 +2,7 @@ package com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.data.repository.restaurant.RestaurantRepository
 import com.doyeon.chapter14.deliveryapplication.model.restaurant.RestaurantModel
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseViewModel
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class RestaurantListViewModel(
     private val restaurantCategory: RestaurantCategory,
+    private var locationLatLng: LocationLatLngEntity,
     private val restaurantRepository: RestaurantRepository
 
     ): BaseViewModel() {
@@ -19,7 +21,7 @@ class RestaurantListViewModel(
 
     override fun fetchData(): Job = viewModelScope.launch{
 
-        val restaurantList = restaurantRepository.getList(restaurantCategory)
+        val restaurantList = restaurantRepository.getList(restaurantCategory, locationLatLng)
         restaurantListLiveData.value = restaurantList.map {
             RestaurantModel(
                 id = it.id,
@@ -34,5 +36,9 @@ class RestaurantListViewModel(
 
             )
         }
+    }
+    fun setLocationLatLng(locationLatLng: LocationLatLngEntity) {
+        this.locationLatLng = locationLatLng
+        fetchData()
     }
 }

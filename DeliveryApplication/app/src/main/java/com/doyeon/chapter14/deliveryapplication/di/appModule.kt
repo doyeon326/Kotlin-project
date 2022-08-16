@@ -1,5 +1,6 @@
 package com.doyeon.chapter14.deliveryapplication.di
 
+import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.data.entity.MapSearchInfoEntity
 import com.doyeon.chapter14.deliveryapplication.data.repository.map.DefaultMapRepository
 import com.doyeon.chapter14.deliveryapplication.data.repository.map.MapRepository
@@ -21,10 +22,10 @@ val appModule = module {
     //koin DI 셋업
     viewModel { HomeViewModel(get()) }
     viewModel { MyViewModel() }
-    viewModel { (restaurantCategory: RestaurantCategory) -> RestaurantListViewModel( restaurantCategory , get())}
+    viewModel { (restaurantCategory: RestaurantCategory, locationLatLng: LocationLatLngEntity) -> RestaurantListViewModel( restaurantCategory , locationLatLng, get())}
     viewModel { (mapsSearchInfoEntity: MapSearchInfoEntity) -> MyLocationViewModel(mapsSearchInfoEntity, get())}
 
-    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get())  }
+    single<RestaurantRepository> { DefaultRestaurantRepository(get(), get(), get())  }
     single<MapRepository> { DefaultMapRepository(get(), get())}
 
     single { provideGsonConvertFactory() }

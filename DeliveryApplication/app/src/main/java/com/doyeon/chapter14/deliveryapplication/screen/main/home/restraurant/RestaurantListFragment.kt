@@ -3,6 +3,7 @@ package com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant
 import android.util.Log
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.databinding.FragmentRestaurantListBinding
 import com.doyeon.chapter14.deliveryapplication.model.restaurant.RestaurantModel
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseFragment
@@ -16,7 +17,9 @@ import org.koin.core.parameter.parametersOf
 class RestaurantListFragment: BaseFragment<RestaurantListViewModel, FragmentRestaurantListBinding>(){
 
     private val restaurantCategory by lazy { arguments?.getSerializable(RESTAURANT_CATEGORY_KEY) as RestaurantCategory }
-    override val viewModel by viewModel<RestaurantListViewModel>{ parametersOf(restaurantCategory)}
+    private val locationLatLng by lazy { arguments?.getParcelable<LocationLatLngEntity>(LOCATION_KEY)}
+
+    override val viewModel by viewModel<RestaurantListViewModel>{ parametersOf(restaurantCategory, locationLatLng)}
 
     override fun getViewBinding(): FragmentRestaurantListBinding = FragmentRestaurantListBinding.inflate(layoutInflater)
 
@@ -45,13 +48,20 @@ class RestaurantListFragment: BaseFragment<RestaurantListViewModel, FragmentRest
         adapter.submitList(it)
     }
 
+
+
     companion object {
         const val RESTAURANT_CATEGORY_KEY = "restaurantCategory"
+        const val LOCATION_KEY = "location"
 
-        fun newInstance(restaurantCategory: RestaurantCategory): RestaurantListFragment {
+        fun newInstance(
+            restaurantCategory: RestaurantCategory,
+            locationLatLng: LocationLatLngEntity
+        ): RestaurantListFragment {
             return RestaurantListFragment().apply {
                 arguments = bundleOf(
-                    RESTAURANT_CATEGORY_KEY to restaurantCategory
+                    RESTAURANT_CATEGORY_KEY to restaurantCategory,
+                    LOCATION_KEY to locationLatLng
                 )
             }
         }

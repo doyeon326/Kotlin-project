@@ -3,6 +3,7 @@ package com.doyeon.chapter14.deliveryapplication.screen.base
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -20,4 +21,6 @@ abstract class BaseViewModel: ViewModel() {
         this.stateBundle = stateBundle
         //프러그먼트 라이프사이클이 종료가 되기전까지 이 상태를 유지함.
     }
+
+
 }

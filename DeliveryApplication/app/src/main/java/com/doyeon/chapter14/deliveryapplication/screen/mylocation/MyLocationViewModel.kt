@@ -1,5 +1,6 @@
 package com.doyeon.chapter14.deliveryapplication.screen.mylocation
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.doyeon.chapter14.deliveryapplication.R
@@ -45,9 +46,12 @@ class MyLocationViewModel(
     }
 
     fun confirmSelectLocation() = viewModelScope.launch {
+        Log.d("MyLocationViewModel","MyLocationViewModel - confirmSelectLocation() called")
         when (val data = myLocationStateLiveData.value) {
             is MyLocationState.Success  -> {
-
+                myLocationStateLiveData.value = MyLocationState.Confirm(
+                    data.mapSearchInfoEntity
+                )
             }
         }
     }

@@ -84,12 +84,13 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         if(::viewPagerAdapter.isInitialized.not()) {
 
             val restaurantListFragmentList = restaurantCategories.map {
-                RestaurantListFragment.newInstance(it)
+                RestaurantListFragment.newInstance(it, locationLatLng)
             }
 
             viewPagerAdapter = RestaurantListFragmentPagerAdapter(
                 this@HomeFragment,
-                restaurantListFragmentList
+                restaurantListFragmentList,
+                locationLatLng
             )
             viewPager.adapter = viewPagerAdapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -98,6 +99,13 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             }.attach()
 
         }
+        if (locationLatLng != viewPagerAdapter.locationLatLngEntity) {
+            viewPagerAdapter.locationLatLngEntity = locationLatLng
+            viewPagerAdapter.fragmentList.forEach {
+                it.viewModel.setLocationLatLng(locationLatLng)
+            }
+        }
+
 
 
 

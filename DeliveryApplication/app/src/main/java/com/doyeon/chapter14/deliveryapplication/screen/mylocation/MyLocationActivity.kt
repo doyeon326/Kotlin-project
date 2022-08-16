@@ -1,5 +1,6 @@
 package com.doyeon.chapter14.deliveryapplication.screen.mylocation
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -52,7 +53,7 @@ class MyLocationActivity : BaseActivity<MyLocationViewModel, ActivityMyLocationB
             finish()
         }
         confirmButton.setOnClickListener {
-
+            viewModel.confirmSelectLocation()
         }
         setupGoogleMap()
     }
@@ -71,11 +72,11 @@ class MyLocationActivity : BaseActivity<MyLocationViewModel, ActivityMyLocationB
                 }
             }
 
-            is MyLocationState.Uninitialized -> {
-
-            }
-
             is MyLocationState.Confirm -> {
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(HomeViewModel.MY_LOCATION_KEY, it.mapSearchInfoEntity)
+                })
+                finish()
 
             } is MyLocationState.Error -> {
             Toast.makeText(this, it.messageId, Toast.LENGTH_SHORT).show()
