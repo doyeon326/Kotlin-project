@@ -10,10 +10,18 @@ import kotlinx.coroutines.launch
 class RestaurantDetailViewModel(
     private val restaurantEntity: RestaurantEntity
 ) : BaseViewModel() {
-    val restaurantDetailLiveData = MutableLiveData<RestaurantDetailState>(RestaurantDetailState.Uninitialized)
+    val restaurantDetailStateLiveData = MutableLiveData<RestaurantDetailState>(RestaurantDetailState.Uninitialized)
     override fun fetchData(): Job = viewModelScope.launch {
-        restaurantDetailLiveData.value = RestaurantDetailState.Success(
+        restaurantDetailStateLiveData.value = RestaurantDetailState.Success(
             restaurantEntity = restaurantEntity
         )
+    }
+
+    fun getRestaurantPhoneNumber(): String? {
+        return when (val data = restaurantDetailStateLiveData.value) {
+            is RestaurantDetailState.Success -> {
+                data.restaurantEntity.restaurantTelNum
+            } else -> null
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.det
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import com.doyeon.chapter14.deliveryapplication.R
@@ -54,12 +55,17 @@ class RestaurantDetailActivity :BaseActivity<RestaurantDetailViewModel, Activity
         })
 
         toolbar.setNavigationOnClickListener { finish() }
-        callButton.setOnClickListener {  }
+        callButton.setOnClickListener {
+            viewModel.getRestaurantPhoneNumber()?.let { telNumber ->
+                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$telNumber"))
+                startActivity(intent)
+            }
+        }
         likeButton.setOnClickListener {  }
         shareButton.setOnClickListener {  }
     }
 
-    override fun observeData() = viewModel.restaurantDetailLiveData.observe(this){
+    override fun observeData() = viewModel.restaurantDetailStateLiveData.observe(this){
         when (it) {
             is RestaurantDetailState.Success -> {
                 handleSuccess(it)
