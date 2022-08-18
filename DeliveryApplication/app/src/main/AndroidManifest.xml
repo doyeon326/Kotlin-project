@@ -28,18 +28,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".screen.mylocation.MyLocationActivity"
-            android:exported="false" >
+            android:exported="false"></activity>
 
+        <activity
+            android:name=".screen.main.home.restaurant.detail.RestaurantDetailActivity"
+            android:exported="false" />
 
-        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map"
-            />
-
+            android:value="@string/google_map" />
     </application>
 
 </manifest>

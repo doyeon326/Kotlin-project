@@ -3,7 +3,7 @@ package com.doyeon.chapter14.deliveryapplication.data.repository.restaurant
 import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.data.entity.RestaurantEntity
 import com.doyeon.chapter14.deliveryapplication.data.network.MapApiService
-import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
+import com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.RestaurantCategory
 import com.doyeon.chapter14.deliveryapplication.util.provider.ResourcesProvider
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -44,7 +44,8 @@ class DefaultRestaurantRepository(
                     grade = (1 until 5).random() + ((0..10).random() / 10f),
                     reviewCount = (0 until 200).random(),
                     deliveryTimeRange = Pair((0..20).random(), (40..60).random()),
-                    deliveryTipRange = Pair((0..1000).random(), (2000..4000).random())
+                    deliveryTipRange = Pair((0..1000).random(), (2000..4000).random()),
+                    restaurantTelNum = poi.telNo
                 )
             }?: listOf()
         } else {

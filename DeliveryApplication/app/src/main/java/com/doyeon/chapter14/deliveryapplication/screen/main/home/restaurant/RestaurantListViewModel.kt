@@ -1,4 +1,4 @@
-package com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant
+package com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 class RestaurantListViewModel(
     private val restaurantCategory: RestaurantCategory,
     private var locationLatLng: LocationLatLngEntity,
-    private val restaurantRepository: RestaurantRepository
+    private val restaurantRepository: RestaurantRepository,
+    private var restaurantOrder: RestaurantOrder = RestaurantOrder.DEFAULT
 
     ): BaseViewModel() {
 
@@ -20,9 +21,22 @@ class RestaurantListViewModel(
     val restaurantListLiveData = MutableLiveData<List<RestaurantModel>>()
 
     override fun fetchData(): Job = viewModelScope.launch{
-
         val restaurantList = restaurantRepository.getList(restaurantCategory, locationLatLng)
-        restaurantListLiveData.value = restaurantList.map {
+        val sortedList = when (restaurantOrder) {
+            RestaurantOrder.TOP_LATE -> {
+                restaurantList.sortedByDescending { it.grade }
+            }
+            RestaurantOrder.DEFAULT -> {
+                restaurantList
+            }
+            RestaurantOrder.LOW_DELIVERY_TIP -> {
+                restaurantList.sortedBy { it.deliveryTipRange.first }
+            }
+            RestaurantOrder.FAST_DELIVERY -> {
+                restaurantList.sortedBy { it.deliveryTimeRange.first }
+            }
+        }
+        restaurantListLiveData.value = sortedList.map {
             RestaurantModel(
                 id = it.id,
                 restaurantInfoId = it.restaurantInfoId,
@@ -32,13 +46,19 @@ class RestaurantListViewModel(
                 grade = it.grade,
                 reviewCount = it.reviewCount,
                 deliveryTimeRange = it.deliveryTimeRange,
-                deliveryTipRange = it.deliveryTipRange
+                deliveryTipRange = it.deliveryTipRange,
+                restaurantTelNum = it.restaurantTelNum
 
             )
         }
     }
     fun setLocationLatLng(locationLatLng: LocationLatLngEntity) {
         this.locationLatLng = locationLatLng
+        fetchData()
+    }
+
+    fun setRestaurantFilterOrder(order: RestaurantOrder) {
+        this.restaurantOrder = order
         fetchData()
     }
 }

@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -18,8 +17,9 @@ import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.data.entity.MapSearchInfoEntity
 import com.doyeon.chapter14.deliveryapplication.databinding.FragmentHomeBinding
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseFragment
-import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
-import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantListFragment
+import com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.RestaurantCategory
+import com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.RestaurantListFragment
+import com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.RestaurantOrder
 import com.doyeon.chapter14.deliveryapplication.screen.mylocation.MyLocationActivity
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.RestaurantListFragmentPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -64,6 +64,7 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         }
 
     override fun initViews() = with(binding){
+        Log.d(TAG, "initViews: ")
         locationTitleText.setOnClickListener{
             viewModel.getMapSearchInfo()?.let { mapInfo ->
                 changeLocationLauncher.launch(
@@ -73,17 +74,59 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 )
             }
         }
-    }
+        orderChipGroup.setOnCheckedStateChangeListener { group, checkedId ->
 
+            when(checkedId.first()) {
+                R.id.chipDefault -> {
+                    chipInitialize.isGone = true
+                    changeRestaurantOrder(RestaurantOrder.DEFAULT)
+                }
 
-    private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
-        val restaurantCategories = RestaurantCategory.values()
-        if(::viewPagerAdapter.isInitialized.not()) {
-            val restaurantListFragmentList = restaurantCategories.map { category ->
-                RestaurantListFragment.newInstance(category, locationLatLng)
+                R.id.chipInitialize -> {
+                    chipInitialize.isChecked = true
+                }
+
+                R.id.chipFastDelivery -> {
+                    chipInitialize.isVisible = true
+                    changeRestaurantOrder(RestaurantOrder.FAST_DELIVERY)
+                }
+
+                R.id.chipLowDeliveryTip -> {
+                    chipInitialize.isVisible = true
+                    changeRestaurantOrder(RestaurantOrder.LOW_DELIVERY_TIP)
+                }
+
+                R.id.chipTopRate -> {
+                    chipInitialize.isVisible = true
+                    changeRestaurantOrder(RestaurantOrder.TOP_LATE)
+                }
             }
 
 
+        }
+    }
+
+    private fun changeRestaurantOrder(order: RestaurantOrder) {
+
+        viewPagerAdapter.fragmentList.forEach {
+            //TODO Viewmodel 접근 불허 :  Can't access ViewModels from detached fragment
+            //it.viewModel.setRestaurantFilterOrder(order)
+        }
+//
+
+
+
+
+    }
+
+    private fun initViewPager(locationLatLng: LocationLatLngEntity) = with(binding) {
+        Log.d(TAG, "initViewPager: ")
+        orderChipGroup.isVisible = true
+        if (::viewPagerAdapter.isInitialized.not()) {
+            val restaurantCategories = RestaurantCategory.values()
+            val restaurantListFragmentList = restaurantCategories.map {
+                RestaurantListFragment.newInstance(it, locationLatLng)
+            }
             viewPagerAdapter = RestaurantListFragmentPagerAdapter(
                 this@HomeFragment,
                 restaurantListFragmentList,
@@ -106,7 +149,6 @@ class HomeFragment: BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     override fun observeData() = viewModel.homeSateLiveData.observe(viewLifecycleOwner){
         when (it) {
-
             HomeState.Uninitialized -> {
                 getMyLocation()
             }

@@ -1,4 +1,4 @@
-package com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant
+package com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant
 
 import androidx.annotation.StringRes
 import com.doyeon.chapter14.deliveryapplication.R

@@ -1,12 +1,12 @@
-package com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant
+package com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant
 
 import android.util.Log
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.doyeon.chapter14.deliveryapplication.data.entity.LocationLatLngEntity
 import com.doyeon.chapter14.deliveryapplication.databinding.FragmentRestaurantListBinding
 import com.doyeon.chapter14.deliveryapplication.model.restaurant.RestaurantModel
 import com.doyeon.chapter14.deliveryapplication.screen.base.BaseFragment
+import com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.detail.RestaurantDetailActivity
 import com.doyeon.chapter14.deliveryapplication.util.provider.ResourcesProvider
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.ModelRecyclerAdapter
 import com.doyeon.chapter14.deliveryapplication.widget.adapter.listener.RestaurantListListener
@@ -31,7 +31,12 @@ class RestaurantListFragment: BaseFragment<RestaurantListViewModel, FragmentRest
             resourcesProvider,
             adapterListener = object : RestaurantListListener {
                 override fun oncClickItem(model: RestaurantModel) {
-                    Toast.makeText(requireContext(), "$model", Toast.LENGTH_SHORT).show()
+                    startActivity(
+                        RestaurantDetailActivity.newIntent(
+                            requireContext(),
+                            model.toEntity()
+                        )
+                    )
                 }
             })
     }
@@ -51,6 +56,7 @@ class RestaurantListFragment: BaseFragment<RestaurantListViewModel, FragmentRest
     companion object {
         const val RESTAURANT_CATEGORY_KEY = "restaurantCategory"
         const val LOCATION_KEY = "location"
+        const val RESTAURANT_KEY = "Restaurant"
 
         fun newInstance(
             restaurantCategory: RestaurantCategory,

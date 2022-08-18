@@ -1,7 +1,7 @@
 package com.doyeon.chapter14.deliveryapplication.data.entity
 
 import android.os.Parcelable
-import com.doyeon.chapter14.deliveryapplication.screen.main.home.restraurant.RestaurantCategory
+import com.doyeon.chapter14.deliveryapplication.screen.main.home.restaurant.RestaurantCategory
 import kotlinx.android.parcel.Parcelize
 
 
@@ -15,6 +15,7 @@ class RestaurantEntity(
     val grade: Float,
     val reviewCount: Int,
     val deliveryTimeRange: Pair<Int,Int>,
-    val deliveryTipRange: Pair<Int, Int>
+    val deliveryTipRange: Pair<Int, Int>,
+    val restaurantTelNum: String?
 
 ): Entity, Parcelable
